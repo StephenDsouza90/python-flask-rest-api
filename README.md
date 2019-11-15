@@ -145,7 +145,7 @@ An example of a curl command is as follows.
 
 **Example:** 
 
-Curl command for adding a new course to courses_data.
+Curl command for adding a new course to `courses_data`.
 
 ```
 curl -H "Content-Type: application/json" 
@@ -157,12 +157,12 @@ curl -H "Content-Type: application/json"
 1. curl: stands for client
 2. header: mentioning content type (only for POST or PUT)
 3. method: instructions from client to server (POST, GET, PUT or DELETE)
-3. data: the client provides the data in JSON format {key:value, key:value} (only for POST or PUT request)
+3. data: the client provides the data in JSON format {key:value, key:value} (only for POST or PUT)
 5. URL: "localhost:8080/courses" - URL is localhost:port/resource ((/parameter) (depending on the function))
 
 ### URL and route mapping
 
-The URL maps to the route via the app.route decorator function which is part of the Flask Library. These functions are then responsible for processing client requests and returning responses.
+The URL maps to the route via the `app.route` decorator function which is part of the Flask Library. These functions are then responsible for processing client requests and returning responses.
 
 **Route example:**
 ```
