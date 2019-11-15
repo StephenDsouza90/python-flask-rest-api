@@ -18,9 +18,7 @@ github.com - Endpoint
 
 ## Flask
 
-Flask is a mirco web framework written in Python. 
-
->>>>>> Need to write more on flask
+Flask is a mirco web framework written in Python. A microframework is a minimalistic web application framework which is constructed with a full-stack framework. It is designed to make getting started quick and easy and begins with a simple wrapper.
 
 ## The set up
 
