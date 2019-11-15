@@ -1,4 +1,4 @@
-# Application - Assigning students to courses
+# Students App
 
 This program is a simple app that stores courses and students data and can assigns students to a course. It is a simple REST API written in python using Flask.
 
@@ -29,7 +29,7 @@ This app runs with the Endpoint localhost (my computer) that has an IP address '
 localhost:8080
 ```
 
-In this app, the courses and students data has already been created in the courses_data and students_data objects respectively. The assignment_data has an empty list through which the client can alter it as required.
+In this app, the courses and students data has already been created in the courses_data and students_data objects respectively. The assignment_data object has an empty list through which the client can alter it as required.
 
 ### create_app()
 
@@ -43,7 +43,9 @@ courses data:
 ```
 2. Add a new course (POST request)
 ```
->> curl -H "Content-Type: application/json" -X POST -d "{\"course_id\":\"english\", \"name\":\"English\"}" "localhost:8080/courses"
+>> curl -H "Content-Type: application/json" \
+        -X POST -d "{\"course_id\":\"english\", \"name\":\"English\"}" \
+        "localhost:8080/courses"
 ```
 3. Get a particular course (GET request)
 ```
@@ -55,7 +57,9 @@ courses data:
 ```
 5. Update a particular course (PUT request)
 ```
->> curl -H "Content-Type: application/json" -X PUT -d "{\"course_id\":\"math\", \"name\":\"Advance Mathematics\"}" "localhost:8080/courses/finance"
+>> curl -H "Content-Type: application/json" -X PUT \
+        -d "{\"course_id\":\"math\", \"name\":\"Advance Mathematics\"}" \
+        "localhost:8080/courses/finance"
 ```
 
 students data:
@@ -66,7 +70,9 @@ students data:
 ```
 2. Add a new student (POST request)
 ```
->> curl -H "Content-Type: application/json" -X POST -d "{\"student_id\":4, \"name\":\"Ariana\"}" "localhost:8080/students"
+>> curl -H "Content-Type: application/json" -X POST \
+        -d "{\"student_id\":4, \"name\":\"Ariana\"}" \
+        "localhost:8080/students"
 ```
 3. Get a particular student (GET request)
 ```
@@ -78,14 +84,18 @@ students data:
 ```
 5. Update a particular student (PUT request)
 ```
->> curl -H "Content-Type: application/json" -X PUT -d "{\"student_id\":4, \"name\":\"Arie\"}" "localhost:8080/students/4"
+>> curl -H "Content-Type: application/json" -X PUT \
+        -d "{\"student_id\":4, \"name\":\"Arie\"}" \
+        "localhost:8080/students/4"
 ```
 
 assignments data:
 
 1. Assign a student to a course (POST request) 
 ```
->> curl -H "Content-Type: application/json" -X POST -d "{\"student_id\":1, \"course_id\":\"math\"}" "localhost:8080/assignments"
+>> curl -H "Content-Type: application/json" -X POST \
+        -d "{\"student_id\":1, \"course_id\":\"math\"}" \
+        "localhost:8080/assignments"
 ```
 2. Get all assignments (GET request)
 ```
@@ -104,38 +114,57 @@ assignments data:
 >> curl -XDELETE "localhost:8080/assignments/courses/math/1"
 ```
 
-### routing
+### route
 
-The routing is showed below
+The routing is showed below.
 
-1. /courses for courses_data
-2. /students for students_data
-3. /assignments for assignments_data
+1. /courses for returning data about the courses saved in courses_data data structure
+2. /students for returning data about the students saved in students_data data structure 
+3. /assignments for returning data about the assignments saved in assignments_data data structure
 
-Some of the routes have their respective parameter.
+Some of the routes have an additional parameter.
 
-Example: The route for geting a particular course is '/courses/<course_id>'
+Example: 
+
+The route for geting a particular course is '/courses/<course_id>'
 
 ### method type
 
 The method types are
 
-1. GET: -X GET
-2. POST: -X POST
-3. PUT: -X PUT
-4. DELETE: -XDELETE
+1. -X GET: Request for viewing a resource 
+2. -X POST: Request for adding a resource 
+3. -X PUT: Request for updating a resource 
+4. -XDELETE: Request for deleting a resource 
 
-### url maping to function
+### curl command
 
-The URL maps to function by follows.
+An example of a curl command is as follows.
 
-Example: URL for adding a new course to courses_data.
+Example: 
+
+Curl command for adding a new course to courses_data.
 
 ```
 curl -H "Content-Type: application/json" -X POST -d "{\"course_id\":\"english\", \"name\":\"English\"}" "localhost:8080/courses"
 ```
 
-1. URL: "localhost:8080/courses" - where the route is localhost/port/endpoint or host/port/endpoint/parameter (depending on the function) 
-2. curl: stands for client
-3. data: if it is a POST or PUT request, the client provides the data in JSON format {key:value, key:value}
-4. header: mentioning content type (only for POST or PUT)
+1. curl: stands for client
+2. header: mentioning content type (only for POST or PUT)
+3. method: instructions from client to server (GET, POST, PUT, DELETE)
+3. data: for POST or PUT request, the client provides the data in JSON format {key:value, key:value}
+5. URL: "localhost:8080/courses" - where the URL is localhost:port/endpoint or host:port/endpoint/parameter (depending on the function) 
+
+### URL and route mapping
+
+The URL maps to the route via the app.routes decorator function which is part of the Flask Library. These functions are then responsible for processing client requests and returning responses.
+
+Route example:
+```
+'/courses/<course_id>'
+```
+
+URL example:
+```
+"localhost:8080/courses/math"
+```
