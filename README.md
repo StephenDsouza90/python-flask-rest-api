@@ -4,15 +4,17 @@ This program is a simple app that stores courses and students data and can assig
 
 ## REST API
 
-A REST (REpresentational State Transfer) API (Application Programming Interface) is a transfer of resources (data) from a Server to a Client over the internet. Through the REST API, the client can perform a GET, POST, PUT, DELETE request to the server.
+A REST (REpresentational State Transfer) API (Application Programming Interface) is a transfer of resources (data) from a Server to a Client over the internet. Through the REST API, the client can perform a GET, POST, PUT, DELETE request on the server.
 
-A client uses an API to request for resources from the server. A server has the resources and transfers it to the client through an API. A resource can be any object for example, user, photo, number. An API allows one software to talk to another. It is a procedure allowing a client to access the data from a server. 
+A client can use an API to request for resources from the server. A server has the resources and transfers it to the client through an API. A resource can be any object for example, user, photo, number. An API allows one software to talk to another. It is a procedure allowing a client to access the data from a server. 
 
 An example of an API is "https://github.com/StephenDsouza90/demo-crud-sqlite-python-app" where:
  
-github.com/StephenDsouza90 - Endpoint URL
+github.com - Endpoint
 
-demo-crud-sqlite-python-app - Parameter
+/StephenDsouza90/demo-crud-sqlite-python-app - Resource in which 
+
+/StephenDsouza90 is the parameter for the github username and /demo-crud-sqlite-python-app is the parameter for the github user's project name
 
 ## Flask
 
@@ -20,23 +22,18 @@ Flask is a mirco web framework written in Python.
 
 >>>>>> Need to write more on flask
 
-## Set up of rest.py 
+## The set up
 
-This app runs on a localhost (my computer) with an IP address of '0.0.0.0' (which maps to my computer) and a port 8080 as an endpoint.
-
-Example: 
-
-github.com - Localhost
-
-StephenDsouza90 - Endpoint
-
-## How the app works
+This app runs with the Endpoint localhost (my computer) that has an IP address '0.0.0.0' (which maps to my computer) and a port 8080.
+```
+localhost:8080
+```
 
 In this app, the courses and students data has already been created in the courses_data and students_data objects respectively. The assignment_data has an empty list through which the client can alter it as required.
 
 ### create_app()
 
-The create_app function has the following methods for
+The create_app function has the following functions and curl commands.
 
 courses data:
 
@@ -132,11 +129,13 @@ The method types are
 
 The URL maps to function by follows.
 
-Example: Adding a new course to courses_data.
+Example: URL for adding a new course to courses_data.
 
+```
 curl -H "Content-Type: application/json" -X POST -d "{\"course_id\":\"english\", \"name\":\"English\"}" "localhost:8080/courses"
+```
 
-1. URL: "localhost:8080/courses" where the route is localhost/port/endpoint or host/port/endpoint/parameter (depending on the function) 
+1. URL: "localhost:8080/courses" - where the route is localhost/port/endpoint or host/port/endpoint/parameter (depending on the function) 
 2. curl: stands for client
 3. data: if it is a POST or PUT request, the client provides the data in JSON format {key:value, key:value}
 4. header: mentioning content type (only for POST or PUT)
