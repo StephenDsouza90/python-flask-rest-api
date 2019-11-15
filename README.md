@@ -1,4 +1,4 @@
-### Assigning students to courses
+# Application - Assigning students to courses
 
 This program is a simple app that stores courses and students data and can assigns students to a course. It is a simple REST API written in python using Flask.
 
@@ -21,7 +21,7 @@ Flask is a mirco web framework written in Python.
 
 > Need to write more on flask
 
-## rest.py set up
+## Set up of rest.py 
 
 This app runs on a localhost (my computer) with an IP address of '0.0.0.0' (which maps to my computer) and a port 8080 as an endpoint.
 
@@ -34,7 +34,7 @@ StephenDsouza90 - Endpoint
 
 In this app, the courses and student data has already been created in the courses_data and students_data objects respectively. The assignment_data has an empty list through which the client can alter as required.
 
-# create_app
+### create_app
 
 The create_app function has the following methods for
 
@@ -62,7 +62,7 @@ assignment data:
 4. Get total number of students in a particular course (GET request)
 5. Delete a particular student from a course (DELETE request)
 
-# routing, method type, url maping to function
+### routing, method type, url maping to function
 
 The routing is done through 
 
