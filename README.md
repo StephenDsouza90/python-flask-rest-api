@@ -11,6 +11,7 @@ A client uses an API to request for resources from the server. A server has the 
 An API allows one software to talk to another. It is a procedure allowing a client to access the data from a server. An example of an API is https://github.com/StephenDsouza90/demo-crud-sqlite-python-app where:
  
 github.com/StephenDsouza90 - Endpoint URL
+
 demo-crud-sqlite-python-app - Parameter
 
 Through the REST API, the client can perform a GET, POST, PUT, DELETE request to the server.
@@ -28,6 +29,7 @@ This app runs on a localhost (my computer) with an IP address of '0.0.0.0' (whic
 Example: 
 
 github.com - Localhose
+
 StephenDsouza90 - Endpoint
 
 ## How the app works
@@ -67,7 +69,9 @@ assignment data:
 The routing is done through 
 
 localhost:8080/courses for courses_data
+
 localhost:8080/students for students_data
+
 localhost:8080/assignments for assignments_data
 
 along with its respective parameter.
@@ -77,15 +81,21 @@ Example: The route for geting a particular course is '/courses/<course_id>'
 The method types are for
 
 GET: -X GET
+
 POST: -X POST
+
 PUT: -X PUT
+
 DELETE: -XDELETE
 
 The URL maps to function by providing the following details.
 
 curl - Stands for client
+
 route - host/port/endpoint or host/port/endpoint/parameter (depending on the function) 
+
 data - if it is a POST or PUT request, the client provides the data in JSON format {key:value, key:value}
+
 header - mentioning content type (only for POST or PUT)
 
 Example: An example for adding a new course to courses_data.
