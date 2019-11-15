@@ -173,3 +173,21 @@ The URL maps to the route via the `app.route` decorator function which is part o
 ```
 "localhost:8080/courses/math"
 ```
+
+## How to run locally:
+
+Running the server
+```
+>> python rest.py
+
+Serving on http://StephenDsouza:8080
+Found course math
+```
+
+```
+curl command
+>> "localhost:8080/courses/math"
+
+resource
+{"course_id": "math", "name": "Mathematics"}
+```
