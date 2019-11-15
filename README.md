@@ -41,26 +41,41 @@ The create_app function has the following methods for
 courses data:
 
 1. Get all courses (GET request)
+>> curl localhost:8080/courses
 2. Add a new course (POST request)
+>> curl -H "Content-Type: application/json" -X POST -d "{\"course_id\":\"english\", \"name\":\"English\"}" "localhost:8080/courses"
 3. Get a particular course (GET request)
+>> curl -X GET "localhost:8080/courses/math"
 4. Delete a particular course (DELETE request)
+>> curl -XDELETE "localhost:8080/courses/math"
 5. Update a particular course (PUT request)
+>> curl -H "Content-Type: application/json" -X PUT -d "{\"course_id\":\"math\", \"name\":\"Advance Mathematics\"}" "localhost:8080/courses/finance"
 
 students data:
 
 1. Get all students (GET request)
+>> curl localhost:8080/students
 2. Add a new student (POST request)
+>> curl -H "Content-Type: application/json" -X POST -d "{\"student_id\":4, \"name\":\"Ariana\"}" "localhost:8080/students"
 3. Get a particular student (GET request)
+>> curl -X GET "localhost:8080/students/1"
 4. Delete a particular student (DELETE request)
+>> curl -XDELETE "localhost:8080/students/1"
 5. Update a particular student (PUT request)
+>> curl -H "Content-Type: application/json" -X PUT -d "{\"student_id\":4, \"name\":\"Arie\"}" "localhost:8080/students/4"
 
 assignments data:
 
 1. Assign a student to a course (POST request) 
+>> curl -H "Content-Type: application/json" -X POST -d "{\"student_id\":1, \"course_id\":\"math\"}" "localhost:8080/assignments"
 2. Get all assignments (GET request)
+>> curl localhost:8080/assignments
 3. Get courses of a particular student (GET request)
+>> curl -X GET "localhost:8080/assignments/students/1"
 4. Get total number of students in a particular course (GET request)
+>> curl -X GET "localhost:8080/assignments/courses/math"
 5. Delete a particular student from a course (DELETE request)
+>> curl -XDELETE "localhost:8080/assignments/courses/math/1"
 
 ### routing
 
