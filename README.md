@@ -43,8 +43,8 @@ courses data:
 ```
 2. Add a new course (POST request)
 ```
->> curl -H "Content-Type: application/json" \
-        -X POST -d "{\"course_id\":\"english\", \"name\":\"English\"}" \
+>> curl -H "Content-Type: application/json" -X POST \
+        -d "{\"course_id\":\"english\", \"name\":\"English\"}" \
         "localhost:8080/courses"
 ```
 3. Get a particular course (GET request)
@@ -132,8 +132,8 @@ The route for geting a particular course is '/courses/<course_id>'
 
 The method types are
 
-1. -X GET: Request for viewing a resource 
-2. -X POST: Request for adding a resource 
+1. -X POST: Request for creating a resource 
+2. -X GET: Request for reading a resource 
 3. -X PUT: Request for updating a resource 
 4. -XDELETE: Request for deleting a resource 
 
@@ -146,18 +146,21 @@ Example:
 Curl command for adding a new course to courses_data.
 
 ```
-curl -H "Content-Type: application/json" -X POST -d "{\"course_id\":\"english\", \"name\":\"English\"}" "localhost:8080/courses"
+curl -H "Content-Type: application/json" 
+     -X POST 
+     -d "{\"course_id\":\"english\", \"name\":\"English\"}" 
+     "localhost:8080/courses"
 ```
 
 1. curl: stands for client
 2. header: mentioning content type (only for POST or PUT)
-3. method: instructions from client to server (GET, POST, PUT, DELETE)
-3. data: for POST or PUT request, the client provides the data in JSON format {key:value, key:value}
-5. URL: "localhost:8080/courses" - where the URL is localhost:port/endpoint or host:port/endpoint/parameter (depending on the function) 
+3. method: instructions from client to server (POST, GET, PUT or DELETE)
+3. data: the client provides the data in JSON format {key:value, key:value} (only for POST or PUT request)
+5. URL: "localhost:8080/courses" - URL is localhost:port/resource ((/parameter) (depending on the function))
 
 ### URL and route mapping
 
-The URL maps to the route via the app.routes decorator function which is part of the Flask Library. These functions are then responsible for processing client requests and returning responses.
+The URL maps to the route via the app.route decorator function which is part of the Flask Library. These functions are then responsible for processing client requests and returning responses.
 
 Route example:
 ```
