@@ -1,4 +1,4 @@
-# Students App
+# Student App
 
 This program is a simple app that stores courses and students data and can assigns students to a course. It is a simple REST API written in python using Flask.
 
@@ -8,7 +8,7 @@ A REST (REpresentational State Transfer) API (Application Programming Interface)
 
 A client can use an API to request for resources from the server. A server has the resources and transfers it to the client through an API. A resource can be any object for example, user, photo, number. An API allows one software to talk to another. It is a procedure allowing a client to access the data from a server. 
 
-An example of an API is "https://github.com/StephenDsouza90/demo-crud-sqlite-python-app" where:
+An example of an API is `https://github.com/StephenDsouza90/demo-crud-sqlite-python-app` where:
  
 github.com - Endpoint
 
@@ -29,13 +29,15 @@ This app runs with the Endpoint localhost (my computer) that has an IP address '
 localhost:8080
 ```
 
-In this app, the courses and students data has already been created in the courses_data and students_data objects respectively. The assignment_data object has an empty list through which the client can alter it as required.
+In this app, the courses and students data has already been created in the `courses_data` and `students_data` objects respectively. The `assignment_data` object has an empty list through which the client can alter it as required.
 
 ### create_app()
 
-The create_app function has the following functions and curl commands.
+The `create_app` function is responsible for defining the routes. These routes are mapped to the functions and these functions will be responsible for processing the client requests and send back responses.
 
-courses data:
+The `create_app` function has the following functions and curl commands.
+
+**courses data:**
 
 1. Get all courses (GET request)
 ```
@@ -62,7 +64,7 @@ courses data:
         "localhost:8080/courses/finance"
 ```
 
-students data:
+**students data:**
 
 1. Get all students (GET request)
 ```
@@ -89,7 +91,7 @@ students data:
         "localhost:8080/students/4"
 ```
 
-assignments data:
+**assignments data:**
 
 1. Assign a student to a course (POST request) 
 ```
@@ -124,7 +126,7 @@ The routing is showed below.
 
 Some of the routes have an additional parameter.
 
-Example: 
+**Example:** 
 
 The route for geting a particular course is '/courses/<course_id>'
 
@@ -141,7 +143,7 @@ The method types are
 
 An example of a curl command is as follows.
 
-Example: 
+**Example:** 
 
 Curl command for adding a new course to courses_data.
 
@@ -162,12 +164,12 @@ curl -H "Content-Type: application/json"
 
 The URL maps to the route via the app.route decorator function which is part of the Flask Library. These functions are then responsible for processing client requests and returning responses.
 
-Route example:
+**Route example:**
 ```
 '/courses/<course_id>'
 ```
 
-URL example:
+**URL example:**
 ```
 "localhost:8080/courses/math"
 ```
