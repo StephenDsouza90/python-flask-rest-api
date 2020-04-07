@@ -1,192 +1,167 @@
-import flask
-from flask import Flask, json
-import waitress
+from flask import Flask, request
+from flask_restplus import Api, Resource, fields
 
 
-# Standard server  responses
+app = Flask("Student App")
+api = Api(app)
+
+
 not_found = {"message": "Not Found"}
 success = {"message": "Success"}
 failed = {"message": "Failed"}
 
+
 # Courses Data Resource: A list of courses data 
 courses_data = [
-    {"course_id": "math", "name": "Mathematics"},
-    {"course_id": "python", "name": "Python Programming"},
-    {"course_id": "finance", "name": "Finance"},
+    {"course_name": "Mathematics", "course_id": 1}
 ]
+
+course = api.model("Course", {
+    "course_name": fields.String("Course Name")
+})
+
 
 # Student Data Resource: A list of students data 
 students_data = [
-    {"student_id": 1, "name": "Stephen"},
-    {"student_id": 2, "name": "Jude"},
-    {"student_id": 3, "name": "Rachel"}
+    {"student_name": "Stephen", "student_id": 1}
 ]
 
+student = api.model("Student", {
+    "student_name": fields.String("Student Name")
+})
+
+
 # Assignment Data Resource: A list of students assigned to courses 
-assignment_data = [ ]
+assignment_data = [] # {"student_id": 1, "course_name": 1},
+
+assignment = api.model("Assignment", {
+    "student_id": fields.Integer(),
+    "course_id": fields.Integer()
+})
 
 
-def create_app():
-    """
-    This function creates the server app and configures all the 
-    GET, POST, PUT, DELETE routes for the resources.
-    """
-    app = Flask("Student App")
+@api.route("/courses")
+class Courses(Resource):
 
+    def get(self):
+        """ Get all courses """
 
-    @app.route('/courses', methods=['GET'])
-    def get_courses():
-        """
-        GET request to get all courses:
-            >> curl localhost:8080/courses
-        """
-        return json.dumps(courses_data)
+        return courses_data
 
-    @app.route('/courses', methods=['POST'])
-    def add_course():
-        """
-        POST request to add a new course:
-            >> curl -H "Content-Type: application/json" -X POST -d "{\"course_id\":\"english\", \"name\":\"English\"}" "localhost:8080/courses"
-        """
-        course_id = flask.request.json["course_id"]
-        course_name = flask.request.json["name"]
-        new_course = {"course_id": course_id, "name": course_name}
+    @api.expect(course)
+    def post(self):
+        """ Add a new course """
+
+        new_course = api.payload
+        new_course["course_id"] = len(courses_data) + 1
         courses_data.append(new_course)
-        print("Added new course {}".format(course_id))
-        return json.dumps(success)
+        return success, 201
 
-    @app.route('/courses/<course_id>', methods=['GET'])
-    def get_course(course_id):
-        """
-        GET request to get a particular course:
-            >> curl -X GET "localhost:8080/courses/math"
-        """
-        for c in courses_data:
-            if c["course_id"] == course_id:
-                print("Found course {}".format(course_id))
-                return json.dumps(c)
-        print("Course not found {}".format(course_id))
-        return json.dumps(not_found), 404
 
-    @app.route('/courses/<course_id>', methods=['DELETE'])
-    def delete_course(course_id):
-        """
-        DELETE request to delete a particular course:
-            >> curl -XDELETE "localhost:8080/courses/math"
-        """
-        for c in courses_data:
-            if c["course_id"] == course_id:
-                courses_data.remove(c)
-                print("Deleted course {}".format(course_id))
-                return json.dumps(success)
-        print("Course not found {}".format(course_id))
-        return json.dumps(not_found), 404
+@api.route("/courses/<int:course_id>")
+class Course(Resource):
 
-    @app.route('/courses/<course_id>', methods=['PUT'])
-    def update_course(course_id):
-        """
-        UPDATE request to update a particular course:
-            >> curl -H "Content-Type: application/json" -X PUT -d "{\"course_id\":\"math\", \"name\":\"Advance Mathematics\"}" "localhost:8080/courses/finance"
-        """
-        for c in courses_data:
-            if c["course_id"] == course_id:
-                new_course_name = flask.request.json["name"]
-                c["name"] = new_course_name
-                print("Updated course {}".format(course_id))
-                return json.dumps(success)
-        print("Course not updated {}".format(course_id))
-        return json.dumps(not_found), 404
+    def get(self, course_id):
+        """ Get a particular course """ 
 
-    @app.route('/students', methods=['GET'])
-    def get_students():
-        """
-        GET request to get all students:
-            >> curl localhost:8080/students
-        """
-        return json.dumps(students_data)
+        for course in courses_data:
+            if course["course_id"] == course_id:
+                return course
+        return not_found, 404
+    
+    def delete(self, course_id):
+        """ Delete a particular course """
 
-    @app.route('/students', methods=['POST'])
-    def add_student():
-        """
-        POST request to add a new student:
-            >> curl -H "Content-Type: application/json" -X POST -d "{\"student_id\":4, \"name\":\"Ariana\"}" "localhost:8080/students"
-        """
-        student_id = flask.request.json["student_id"]
-        name = flask.request.json["name"]
-        new_student_data = {"student_id":student_id, "name":name}
-        students_data.append(new_student_data)
-        print("Added new student {}".format(student_id))
-        return json.dumps(success)
+        for course in courses_data:
+            if course["course_id"] == course_id:
+                courses_data.remove(course)
+                return success
+        return not_found, 404
 
-    @app.route('/students/<int:student_id>', methods=['GET'])
-    def get_student(student_id):
-        """
-        GET request to get a particular student:
-            >> curl -X GET "localhost:8080/students/1"
-        """
-        for s in students_data:
-            if s["student_id"] == student_id:
-                print("Found student {}".format(student_id))
-                return json.dumps(s)
-        print("Student not found {}".format(student_id))
-        return json.dumps(not_found), 404
+    @api.expect(course)
+    def put(self, course_id):
+        """ Update a particular course """
 
-    @app.route('/students/<int:student_id>', methods=['DELETE'])
-    def delete_student(student_id):
-        """
-        DELETE request to delete a particular student:
-            >> curl -XDELETE "localhost:8080/students/1"
-        """
-        for s in students_data:
-            if s["student_id"] == student_id:
-                students_data.remove(s)
-                print("Deleted student {}".format(student_id))
-                return json.dumps(success)
-        print("Student not found {}".format(student_id))
-        return json.dumps(not_found), 404
+        for course in courses_data:
+            if course["course_id"] == course_id:
+                updated_course_name = api.payload["course_name"]
+                course["course_name"] = updated_course_name
+                return success
+        return not_found, 404
 
-    @app.route('/students/<int:student_id>', methods=['PUT'])
-    def update_student(student_id):
-        """
-        UPDATE request to update a particular student:
-            >> curl -H "Content-Type: application/json" -X PUT -d "{\"student_id\":4, \"name\":\"Arie\"}" "localhost:8080/students/4"
-        """
-        for s in students_data:
-            if s["student_id"] == student_id:
-                new_student_name = flask.request.json["name"]
-                s["name"] = new_student_name
-                print("Updated student {}".format(student_id))
-                return json.dumps(success)
-        print("Student not updated {}".format(student_id))
-        return json.dumps(not_found), 404
 
-    @app.route('/assignments', methods=['POST'])
-    def assign_student_to_course():
-        """
-        POST request to assign student to a course:
-            >> curl -H "Content-Type: application/json" -X POST -d "{\"student_id\":1, \"course_id\":\"math\"}" "localhost:8080/assignments"
-        """
-        student_id = flask.request.json["student_id"]
-        course_id = flask.request.json["course_id"]
-        assignment = {"student_id":student_id, "course_id":course_id}
-        assignment_data.append(assignment)
-        print("Assigned student {}".format(student_id))
-        return json.dumps(success)
+@api.route("/students")
+class Students(Resource):
 
-    @app.route('/assignments', methods=['GET'])
-    def get_assignments():
-        """
-        GET request to get all assignments:
-            >> curl localhost:8080/assignments
-        """
-        return json.dumps(assignment_data) 
+    def get(self):
+        """ Get all students """
 
-    @app.route('/assignments/students/<int:student_id>', methods=['GET'])
-    def get_courses_by_student(student_id):
-        """
-        GET request to get courses by a student:
-            >> curl -X GET "localhost:8080/assignments/students/1"
-        """
+        return students_data
+
+    @api.expect(student)
+    def post(self):
+        """ Add a new student """
+
+        new_student = api.payload
+        new_student["student_id"] = len(students_data) + 1
+        students_data.append(new_student)
+        return success, 201
+
+
+@api.route("/students/<int:student_id>")
+class Student(Resource):
+
+    def get(self, student_id):
+        """ Get a particular student """
+
+        for student in students_data:
+            if student["student_id"] == student_id:
+                return student
+        return not_found, 404
+
+    def delete(self, student_id):
+        """ Delete a particular student """
+
+        for student in students_data:
+            if student["student_id"] == student_id:
+                students_data.remove(student)
+                return success
+        return not_found, 404
+
+    @api.expect(student)
+    def put(self, student_id):
+        """ Update a particular student """
+
+        for student in students_data:
+            if student["student_id"] == student_id:
+                new_student_name = api.payload["student_name"]
+                student["student_name"] = new_student_name
+                return success
+        return not_found, 404
+
+
+@api.route("/assignments")
+class Assignments(Resource):
+
+    def get(self):
+        """ Get all assignments """
+
+        return assignment_data
+
+    @api.expect(assignment)
+    def post(self):
+        """ Assign a student to a course """
+
+        assignment_data.append(api.payload)
+        return success, 201
+
+
+@api.route("/assignments/students/<int:student_id>")
+class CoursesByStudent(Resource):
+
+    def get(self, student_id):
+        """ Get courses by a student """
+
         found_course = False
         student_courses = []
         for i in assignment_data:
@@ -194,18 +169,16 @@ def create_app():
                 student_courses.append(i["course_id"])
                 found_course = True
         if found_course:
-            print(student_courses)
-            return json.dumps(student_courses)
+            return student_courses
         else:
-            print("Courses not found for {}".format(student_id))
-            return json.dumps(not_found), 404
+            return not_found, 404
 
-    @app.route('/assignments/courses/<course_id>', methods=['GET'])
-    def total_students_in_course(course_id):
-        """
-        GET request to get total students in a particular course:
-            >> curl -X GET "localhost:8080/assignments/courses/math"
-        """
+@api.route("/assignments/courses/<int:course_id>")
+class TotalStudentsInCourse(Resource):
+
+    def get(self, course_id):
+        """ Get total students in a course """
+
         found_course = False
         count_students = 0
         for i in assignment_data:
@@ -213,39 +186,22 @@ def create_app():
                 count_students += 1
                 found_course = True
         if found_course:
-            print(count_students)
-            return json.dumps(count_students)
+            return count_students
         else:
-            print("Total not found for {}".format(course_id))
-            return json.dumps(not_found), 404
+            return not_found, 404
 
-    @app.route('/assignments/courses/<course_id>/<int:student_id>', methods=['DELETE'])
-    def remove_student_from_course(course_id, student_id):
-        """
-        DELETE request to delete a particular student from a course:
-            >> curl -XDELETE "localhost:8080/assignments/courses/math/1"
-        """
+@api.route('/assignments/courses/<int:course_id>/<int:student_id>')
+class RemoveStudentFromCourse(Resource):
+
+    def delete(self, course_id, student_id):
+        """ Remove student from course """
+
         for i in assignment_data:
             if i["course_id"] == course_id and i["student_id"] == student_id:
                 assignment_data.remove(i)
-                print("Deleted student {}".format(student_id))
-                return json.dumps(success)
-        print("Student not found {}".format(student_id))
-        return json.dumps(not_found), 404
+                return success
+        return not_found, 404
 
 
-    return app
-
-
-# Start of program
-def main():
-
-    # Create the app with all the routes
-    app = create_app()
-
-    # Start the server
-    # app.run(host='0.0.0.0', port='8080', server='gunicorn')
-    waitress.serve(app, host='0.0.0.0', port=8080)
-
-
-main()
+if __name__ == '__main__':
+    app.run(debug=True)

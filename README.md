@@ -1,6 +1,6 @@
 # Student App
 
-This program is a simple app that stores courses and students data and can assigns students to a course. It is a simple REST API written in python using Flask.
+This program is a simple app that stores courses and students data and can assigns students to a course. It is a simple REST API written in python using Flask and Flask-RESTPlus.
 
 ## REST API
 
@@ -20,101 +20,27 @@ github.com - Endpoint
 
 Flask is a mirco web framework written in Python. A microframework is a minimalistic web application framework which is constructed with a full-stack framework. It is designed to make getting started quick and easy and begins with a simple wrapper.
 
-## The set up
+## Flask RESTPlus
 
-This app runs with the Endpoint localhost (my computer) that has an IP address '0.0.0.0' (which maps to my computer) and a port 8080.
+Flask-RESTPlus is a Flask extension that supports building REST APIs quickly. It uses the best practices with minimal setup.
+
+The classes in this app inherits the Resource class from Flask-RESTPlus through which HTTP methods are possible. The methods used in this app are GET, POST, PUT and DELETE. The routes are mapped to the respective classes and these classes have the methods which are responsible for processing the client requests and send back responses.
+
+Flask-RESTPlus also handles the curl commands using Swagger's UI.
+
+## Setup
+
+This app runs in debug mode that has an IP address '127.0.0.1' and a port 5000.
+
 ```
-localhost:8080
+
+http://127.0.0.1:5000/
+
 ```
 
 In this app, the courses and students data has already been created in the `courses_data` and `students_data` objects respectively. The `assignment_data` object has an empty list through which the client can alter it as required.
 
-### create_app()
-
-The `create_app` function is responsible for defining the routes. These routes are mapped to the functions and these functions will be responsible for processing the client requests and send back responses.
-
-The `create_app` function has the following functions and curl commands.
-
-**courses data:**
-
-1. Get all courses (GET request)
-```
->> curl localhost:8080/courses
-```
-2. Add a new course (POST request)
-```
->> curl -H "Content-Type: application/json" -X POST \
-        -d "{\"course_id\":\"english\", \"name\":\"English\"}" \
-        "localhost:8080/courses"
-```
-3. Get a particular course (GET request)
-```
->> curl -X GET "localhost:8080/courses/math"
-```
-4. Delete a particular course (DELETE request)
-```
->> curl -XDELETE "localhost:8080/courses/math"
-```
-5. Update a particular course (PUT request)
-```
->> curl -H "Content-Type: application/json" -X PUT \
-        -d "{\"course_id\":\"math\", \"name\":\"Advance Mathematics\"}" \
-        "localhost:8080/courses/finance"
-```
-
-**students data:**
-
-1. Get all students (GET request)
-```
->> curl localhost:8080/students
-```
-2. Add a new student (POST request)
-```
->> curl -H "Content-Type: application/json" -X POST \
-        -d "{\"student_id\":4, \"name\":\"Ariana\"}" \
-        "localhost:8080/students"
-```
-3. Get a particular student (GET request)
-```
->> curl -X GET "localhost:8080/students/1"
-```
-4. Delete a particular student (DELETE request)
-```
->> curl -XDELETE "localhost:8080/students/1"
-```
-5. Update a particular student (PUT request)
-```
->> curl -H "Content-Type: application/json" -X PUT \
-        -d "{\"student_id\":4, \"name\":\"Arie\"}" \
-        "localhost:8080/students/4"
-```
-
-**assignments data:**
-
-1. Assign a student to a course (POST request) 
-```
->> curl -H "Content-Type: application/json" -X POST \
-        -d "{\"student_id\":1, \"course_id\":\"math\"}" \
-        "localhost:8080/assignments"
-```
-2. Get all assignments (GET request)
-```
->> curl localhost:8080/assignments
-```
-3. Get courses of a particular student (GET request)
-```
->> curl -X GET "localhost:8080/assignments/students/1"
-```
-4. Get total number of students in a particular course (GET request)
-```
->> curl -X GET "localhost:8080/assignments/courses/math"
-```
-5. Delete a particular student from a course (DELETE request)
-```
->> curl -XDELETE "localhost:8080/assignments/courses/math/1"
-```
-
-### route
+## Routes
 
 The routing is showed below.
 
@@ -124,32 +50,51 @@ The routing is showed below.
 
 Some of the routes have an additional parameter.
 
-**Example:** 
+**Example:** The route for geting a particular course is '/courses/<int:course_id>'
 
-The route for geting a particular course is '/courses/<course_id>'
+**Curl Command**
 
-### method type
+An example of a GET curl command is as follows.
 
-The method types are
+Curl command for getting a particular course from `courses_data`.
 
-1. -X POST: Request for creating a resource 
-2. -X GET: Request for reading a resource 
-3. -X PUT: Request for updating a resource 
-4. -XDELETE: Request for deleting a resource 
+```
 
-### curl command
+>> curl -X GET "http://127.0.0.1:5000/courses/1" -H "accept: application/json"
 
-An example of a curl command is as follows.
+```
 
-**Example:** 
+**Response body**
+
+```
+
+{
+  "course_name": "Mathematics",
+  "course_id": 1
+}
+
+```
+
+**Curl Command**
+
+An example of a POST curl command is as follows. 
 
 Curl command for adding a new course to `courses_data`.
 
 ```
-curl -H "Content-Type: application/json" 
-     -X POST 
-     -d "{\"course_id\":\"english\", \"name\":\"English\"}" 
-     "localhost:8080/courses"
+
+curl -X POST "http://127.0.0.1:5000/courses" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"course_name\": \"English\"}"
+
+```
+
+**Response body**
+
+```
+
+{
+  "message": "Success"
+}
+
 ```
 
 1. curl: stands for client
@@ -158,34 +103,26 @@ curl -H "Content-Type: application/json"
 3. data: the client provides the data in JSON format {key:value, key:value} (only for POST or PUT)
 5. URL: "localhost:8080/courses" - URL is localhost:port/resource ((/parameter) (depending on the function))
 
-### URL and route mapping
+## URL and Route Mapping
 
-The URL maps to the route via the `app.route` decorator function which is part of the Flask Library. These functions are then responsible for processing client requests and returning responses.
-
-**Route example:**
-```
-'/courses/<course_id>'
-```
-
-**URL example:**
-```
-"localhost:8080/courses/math"
-```
+The URL maps to the route via the `api.route` decorator which is part of the Flask-RESTPlus Library. These functions are then responsible for processing client requests and returning responses.
 
 ## How to run locally:
 
 Running the server
+
 ```
+
 >> python rest.py
 
-Serving on http://StephenDsouza:8080
-Found course math
-```
+ * Serving Flask app "Student App" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 280-332-611
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
 
-```
-curl command
->> "localhost:8080/courses/math"
-
-resource
-{"course_id": "math", "name": "Mathematics"}
 ```
