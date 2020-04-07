@@ -34,7 +34,6 @@ student = api.model("Student", {
 # Assignment Data Resource: A list of students assigned to courses 
 assignment_data = [] # {"student_id": 1, "course_name": 1},
 
-
 assignment = api.model("Assignment", {
     "student_id": fields.Integer(),
     "course_id": fields.Integer()
